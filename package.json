@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
-	"build": "./node_modules/.bin/webpack"
+    "build": "./node_modules/.bin/webpack"
   },
   "author": "Dipika Sumeet",
   "license": "ISC",
@@ -27,6 +27,7 @@
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
+    "google-maps-react": "^1.1.2",
     "prop-types": "^15.6.0",
     "react-icons": "^2.2.7",
     "react-router": "^3.0.0"
