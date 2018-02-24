@@ -1,5 +1,5 @@
-import {Component} from 'react';
-import {ReactDOM} from 'react-dom';
+import { Component } from 'react';
+import { ReactDOM } from 'react-dom';
 
 export class Map extends Component {
   

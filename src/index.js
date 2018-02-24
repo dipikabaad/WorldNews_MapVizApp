@@ -1,7 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 
-import {App,Map} from './components/App';
+import {App} from './components/App';
 
 import {Router, Route, hashHistory} from 'react-router';
 
@@ -13,3 +13,4 @@ render (
 	</Router>,
 	document.getElementById("map-container")
 )
+
