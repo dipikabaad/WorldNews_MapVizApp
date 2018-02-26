@@ -12,6 +12,7 @@ export class App extends Component {
  
   render() {
     return (
+      <div>
       <GoogleMapReact
         bootstrapURLKeys={{ key: 'AIzaSyAkWNzguOVksu6AvNYpz9DxP71NElW40aw' }}
         defaultCenter={this.props.center}
@@ -23,6 +24,7 @@ export class App extends Component {
           text={'Kreyser Avrora'}
         />
       </GoogleMapReact>
+      </div>
     );
   }
 }
