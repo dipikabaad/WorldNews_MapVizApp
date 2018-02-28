@@ -1,3 +1,4 @@
+var _=require('lodash');
 import React from 'react';
 const fetch = require("isomorphic-fetch");
 const { compose, withProps, withHandlers } = require("recompose");
@@ -21,6 +22,7 @@ const MapWithAMarkerClusterer = compose(
       const clickedMarkers = markerClusterer.getMarkers()
       console.log(`Current clicked markers length: ${clickedMarkers.length}`)
       console.log(clickedMarkers)
+      console.log(_.chain(clickedMarkers).countBy("title").value())
     },
   }),
   withScriptjs,
@@ -39,7 +41,8 @@ const MapWithAMarkerClusterer = compose(
       {props.markers.map(marker => (
         <Marker
           key={marker.photo_id}
-          position={{ lat: marker.latitude, lng: marker.longitude }}
+          position={{ lat: marker.latitude, lng: marker.longitude}}
+          title="politics"
         />
       ))}
     </MarkerClusterer>

@@ -33,6 +33,7 @@
     "google-map-react": "0.32.0",
     "google-maps": "^3.2.1",
     "google-maps-react": "1.1.2",
+    "lodash": "^4.17.5",
     "prop-types": "^15.5.6",
     "react-google-maps": "^9.4.5",
     "react-icons": "^2.2.7",
