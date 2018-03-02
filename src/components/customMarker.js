@@ -7,7 +7,7 @@ const MyMapComponent = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyA6PS9lTvK3KUejjIr7Kg3IBrfvBuyW9WM&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `400px` }} />,
+    containerElement: <div style={{ height: '100%' }} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
   withStateHandlers((i) => ({
@@ -16,7 +16,7 @@ const MyMapComponent = compose(
   }), 
   {
     onToggleOpen: ({isOpen})=>(index)=>({
-       isOpen: isOpen.map((val,i)=>{return (index==i?!val:val)}),
+       isOpen: isOpen.map((val,i)=>{return (index==i?!val:false)}),
     })
   }),
   withScriptjs,
@@ -37,11 +37,10 @@ const MyMapComponent = compose(
         onCloseClick={()=>props.onToggleOpen(marker.key)}
         options={{ closeBoxURL: ``, enableEventPropagation: true }}
       >
-        <div style={{ backgroundColor: `yellow`, opacity: 0.75, padding: `12px` }}>
-          <div style={{ fontSize: `16px`, fontColor: `#08233B` }}>
-            Hello, Kaohsiung!
-          </div>
-        </div>
+        <div style={{position:'relative', backgroundColor: 'black', padding: '10px', width:'400px', height:'100%', fontSize: '16px', color: '#FFFFFF' }}>
+            <p style={{fontWeight:'bold',marginTop:'2px'}}>This is the headline of a news article bla bla bla bnla asadfasfasffzdfagaewgwegwrgqwrg </p><p style={{fontSize:'10px', fontWeight:'italic'}}>Sports</p>
+            <div style={{float:'left',marginRight:'15px'}}><img src="./images/infobox.png" height="50px" width="70px" /></div>Hello, Kaohsiung! Always specify both the height and width attributes for images. If height and width are set, the space required for the image is reserved when the page is loaded. However, without these attributes, the browser does not know the size of the image, and cannot reserve the appropriate space to it. The effect will be that the page layout will change during loading (while the images load).      
+        </div> 
       </InfoBox>}
     </Marker>
       ))}
