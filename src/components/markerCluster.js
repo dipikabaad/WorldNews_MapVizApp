@@ -17,7 +17,7 @@ const MapWithAMarkerClusterer = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyA6PS9lTvK3KUejjIr7Kg3IBrfvBuyW9WM&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `400px` }} />,
+    containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
   withHandlers({
@@ -25,7 +25,12 @@ const MapWithAMarkerClusterer = compose(
       const clickedMarkers = markerClusterer.getMarkers()
       console.log(`Current clicked markers length: ${clickedMarkers.length}`)
       console.log(clickedMarkers)
-      console.log(_.chain(clickedMarkers).countBy("title").value())
+      /*clickedMarkers.forEach(function(cm){
+	console.log(cm.position.lat)
+	console.log(cm.position.lng)
+	console.log("=====================")
+      })*/
+      //console.log(_.chain(clickedMarkers).countBy("title").value())
     },
   }),
   withStateHandlers((i) => ({
@@ -33,7 +38,7 @@ const MapWithAMarkerClusterer = compose(
   }),
   {
     onToggleOpen: ({isOpen})=>(index)=>({
-       isOpen:isOpen.map((val,i)=>{return (index==i?!val:false)}) 
+       isOpen:isOpen.map((val,i)=>{console.log(index);return (index==i?!val:false)}) 
   })
   }),
   withScriptjs,
@@ -41,18 +46,19 @@ const MapWithAMarkerClusterer = compose(
 )(props =>
   <GoogleMap
     defaultZoom={3}
-    defaultCenter={{ lat: 25.0391667, lng: 121.525 }}
+    defaultCenter={{ lat: 33.247875, lng: -83.441162 }}
   >
     <MarkerClusterer
       onClick={props.onMarkerClustererClick}
       averageCenter
       enableRetinaIcons
       gridSize={60}
+      maxZoom={5}     
     >
       {props.markers.map((marker,i) => (
         <Marker
           key={i}
-          position={{ lat: marker.latitude, lng: marker.longitude}}
+          position={{ lat: marker.lat, lng: marker.lng}}
           title={marker.category}
           onClick={()=>props.onToggleOpen(i)}
 	>
@@ -61,7 +67,7 @@ const MapWithAMarkerClusterer = compose(
         options={{ closeBoxURL: ``, enableEventPropagation: true }}
       >
         <div style={{position:'relative', backgroundColor: 'black', padding: '10px', width:'400px', height:'100%', fontSize: '16px', color: '#FFFFFF' }}>
-            <p style={{fontWeight:'bold',marginTop:'2px'}}>{marker.title}</p><p style={{fontSize:'10px', fontWeight:'italic'}}>Sports</p>
+            <p style={{fontWeight:'bold',marginTop:'2px'}}>{marker.title}</p><p style={{fontSize:'10px', fontWeight:'italic'}}>{marker.category}</p>
             <div style={{float:'left',marginRight:'15px'}}><img src={marker.urlToImage} height="50px" width="70px" /></div>{marker.description} 
         </div>
       </InfoBox>}
@@ -77,17 +83,13 @@ export class Cluster extends React.PureComponent {
   }
 
   componentDidMount() {
-    const url = [
-      // Length issue
-      'https://gist.githubusercontent.com',
-      '/farrrr/dfda7dd7fccfec5474d3',
-      '/raw/758852bbc1979f6c4522ab4e92d1c92cba8fb0dc/data.json'
-    ].join("")
+    const url = './data.json'
 
     fetch(url)
       .then(res => res.json())
       .then(data => {
-        this.setState({ markers: data.photos });
+	console.log(data[0]);
+        this.setState({ markers: data.slice(0,50)});
       });
   }
 
@@ -98,4 +100,3 @@ export class Cluster extends React.PureComponent {
   }
 }
 
-//<Cluster />
