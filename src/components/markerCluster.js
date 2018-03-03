@@ -33,7 +33,7 @@ const MapWithAMarkerClusterer = compose(
   }),
   {
     onToggleOpen: ({isOpen})=>(index)=>({
-       isOpen:isOpen.map((val,i)=>{return (index==i?!val:val)}) 
+       isOpen:isOpen.map((val,i)=>{return (index==i?!val:false)}) 
   })
   }),
   withScriptjs,
@@ -53,17 +53,16 @@ const MapWithAMarkerClusterer = compose(
         <Marker
           key={i}
           position={{ lat: marker.latitude, lng: marker.longitude}}
-          title="politics"
+          title={marker.category}
           onClick={()=>props.onToggleOpen(i)}
 	>
       {props.isOpen[i] && <InfoBox
         onCloseClick={()=>props.onToggleOpen(i)}
         options={{ closeBoxURL: ``, enableEventPropagation: true }}
       >
-        <div style={{ backgroundColor: `yellow`, opacity: 0.75, padding: `12px` }}>
-          <div style={{ fontSize: `16px`, fontColor: `#08233B` }}>
-            {marker.owner_name}
-          </div>
+        <div style={{position:'relative', backgroundColor: 'black', padding: '10px', width:'400px', height:'100%', fontSize: '16px', color: '#FFFFFF' }}>
+            <p style={{fontWeight:'bold',marginTop:'2px'}}>{marker.title}</p><p style={{fontSize:'10px', fontWeight:'italic'}}>Sports</p>
+            <div style={{float:'left',marginRight:'15px'}}><img src={marker.urlToImage} height="50px" width="70px" /></div>{marker.description} 
         </div>
       </InfoBox>}
         </Marker>
