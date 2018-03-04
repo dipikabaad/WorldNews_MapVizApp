@@ -25,13 +25,12 @@ const MapWithAMarkerClusterer = compose(
       const clickedMarkers = markerClusterer.getMarkers()
       console.log(`Current clicked markers length: ${clickedMarkers.length}`)
       console.log(clickedMarkers)
-      /*clickedMarkers.forEach(function(cm){
-	console.log(cm.position.lat)
-	console.log(cm.position.lng)
-	console.log("=====================")
-      })*/
+      
       //console.log(_.chain(clickedMarkers).countBy("title").value())
     },
+    onMarkerClustererMouseOver: () => (markerClusterer) => {
+      console.log("MOUSE HOVER")
+    }
   }),
   withStateHandlers((i) => ({
    isOpen: _.range(1093).map(() => { return false; })
@@ -53,14 +52,18 @@ const MapWithAMarkerClusterer = compose(
       averageCenter
       enableRetinaIcons
       gridSize={60}
-      maxZoom={5}     
+      maxZoom={10}    
+      onMouseOver={props.onMarkerClustererMouseOver}
+      title="CLUSTER 1"
     >
+     <p style={{backgroundColor:"black"}}> CLSUTER </p> 
       {props.markers.map((marker,i) => (
         <Marker
           key={i}
           position={{ lat: marker.lat, lng: marker.lng}}
           title={marker.category}
           onClick={()=>props.onToggleOpen(i)}
+          icon={{url:'./images/'+marker.category+'.png'}} 
 	>
       {props.isOpen[i] && <InfoBox
         onCloseClick={()=>props.onToggleOpen(i)}
@@ -74,7 +77,9 @@ const MapWithAMarkerClusterer = compose(
         </Marker>
       ))}
     </MarkerClusterer>
-  </GoogleMap>
+
+
+   </GoogleMap>
 );
 
 export class Cluster extends React.PureComponent {
@@ -89,7 +94,7 @@ export class Cluster extends React.PureComponent {
       .then(res => res.json())
       .then(data => {
 	console.log(data[0]);
-        this.setState({ markers: data.slice(0,50)});
+        this.setState({ markers: data });
       });
   }
 
