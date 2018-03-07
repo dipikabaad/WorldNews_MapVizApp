@@ -15,6 +15,7 @@ const {
   Marker,
 } = require("react-google-maps");
 const { MarkerClusterer } = require("react-google-maps/lib/components/addons/MarkerClusterer");
+const demoFancyMapStyles = require("./demoFancyMapStyles.json");
 
 const MapWithAMarkerClusterer = compose(
   withProps({
@@ -54,6 +55,7 @@ const MapWithAMarkerClusterer = compose(
   <GoogleMap
     defaultZoom={3}
     defaultCenter={{ lat: 33.247875, lng: -83.441162 }}
+    defaultOptions={{ styles: demoFancyMapStyles }}
   >
     <MarkerClusterer
       onClick={props.onMarkerClustererClick}
