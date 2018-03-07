@@ -37,7 +37,7 @@ const MapWithAMarkerClusterer = compose(
   }),
   withStateHandlers((i) => ({
    isOpen: _.range(1093).map(() => { return false; }),
-   isPaneOpen: true
+   isPaneOpen: false
   }),
   {
     onToggleOpen: ({isOpen})=>(index)=>({
@@ -78,7 +78,7 @@ const MapWithAMarkerClusterer = compose(
         options={{ closeBoxURL: ``, enableEventPropagation: true }}
       >
         <div style={{position:'relative', backgroundColor: 'black', padding: '10px', width:'400px', height:'100%', fontSize: '16px', color: '#FFFFFF' }}>
-            <p style={{fontWeight:'bold',marginTop:'2px'}}>{marker.title}</p><p style={{fontSize:'10px', fontWeight:'italic'}}>{marker.category}</p>
+            <p style={{fontWeight:'bold',marginTop:'2px'}} onClick={props.onPaneToggle}>{marker.title}</p><p style={{fontSize:'10px', fontWeight:'italic'}}>{marker.category}</p>
             <div style={{float:'left',marginRight:'15px'}}><img src={marker.urlToImage} height="50px" width="70px" /></div>{marker.description} 
         </div>
       </InfoBox>}
