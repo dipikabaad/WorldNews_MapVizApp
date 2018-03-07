@@ -2,7 +2,10 @@ var _=require('lodash');
 import React from 'react';
 const fetch = require("isomorphic-fetch");
 const {compose, withProps, withHandlers, withStateHandlers} = require("recompose");
-import {InfoBox} from "react-google-maps/lib/components/addons/InfoBox"
+import {InfoBox} from "react-google-maps/lib/components/addons/InfoBox";
+import Modal from 'react-modal';
+import SlidingPane from 'react-sliding-pane';
+import 'react-sliding-pane/dist/react-sliding-pane.css';
 
 
 const {
@@ -33,16 +36,21 @@ const MapWithAMarkerClusterer = compose(
     }
   }),
   withStateHandlers((i) => ({
-   isOpen: _.range(1093).map(() => { return false; })
+   isOpen: _.range(1093).map(() => { return false; }),
+   isPaneOpen: true
   }),
   {
     onToggleOpen: ({isOpen})=>(index)=>({
        isOpen:isOpen.map((val,i)=>{console.log(index);return (index==i?!val:false)}) 
-  })
+  }),
+    onPaneToggle: ({isPaneOpen})=>()=>({
+	isPaneOpen: !isPaneOpen
+    })
   }),
   withScriptjs,
   withGoogleMap
 )(props =>
+  <div>
   <GoogleMap
     defaultZoom={3}
     defaultCenter={{ lat: 33.247875, lng: -83.441162 }}
@@ -80,11 +88,20 @@ const MapWithAMarkerClusterer = compose(
 
 
    </GoogleMap>
+            <SlidingPane
+                isOpen={ props.isPaneOpen }
+                title='Hey, it is optional pane title'
+                from='left'
+                width='200px'
+                onRequestClose={props.onPaneToggle}>
+                <div>And I am pane content on left.</div>
+            </SlidingPane>
+   </div>
 );
 
 export class Cluster extends React.PureComponent {
   componentWillMount() {
-    this.setState({ markers: [] })
+    this.setState({ markers: []})
   }
 
   componentDidMount() {
@@ -96,6 +113,8 @@ export class Cluster extends React.PureComponent {
 	console.log(data[0]);
         this.setState({ markers: data });
       });
+
+    Modal.setAppElement(this.el);
   }
 
   render() {
