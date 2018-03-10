@@ -145,6 +145,12 @@ const MapWithAMarkerClusterer = compose(
 );
 
 export class Cluster extends React.PureComponent {
+  constructor(props){
+    super(props);
+    this.state = ({value: 'ALL', markers:[], markers1:[]});
+    this.handleChange = this.handleChange.bind(this);
+    
+  }
   componentWillMount() {
     this.setState({ markers: []})
   }
@@ -156,15 +162,45 @@ export class Cluster extends React.PureComponent {
       .then(res => res.json())
       .then(data => {
 	console.log(data[0]);
-        this.setState({ markers: data });
+        this.setState({ markers: data, markers1:data });
       });
 
     Modal.setAppElement(this.el);
   }
-
+ handleChange(event) {
+    if (event.target.value != "ALL") {
+      this.setState({ value: event.target.value, 
+        markers1: this.state.markers.filter((x) => {return x.category==event.target.value})
+      });
+    }
+    else
+    {
+      this.setState({value: event.target.value, markers1: this.state.markers});
+    }
+  }
+   /*handleSubmit(event) {
+    this.setState({markers1: this.state.markers.filter((x) => {return x.category=='business'})});
+    alert('An essay was submitted: ' + this.state.value);
+    event.preventDefault();
+  }*/
   render() {
-    return (
-      <MapWithAMarkerClusterer markers={this.state.markers} />
+    return (<div>
+      <form>
+  <label>
+    Category:
+    <select value={this.state.value} onChange={this.handleChange}>
+    <option value="ALL">All</option>
+  <option value="business">Business</option>
+  <option value="sports">Sports</option>
+  <option selected value="technology">Technology</option>
+  <option value="entertainment">Entertainment</option>
+  <option value="general">General</option>
+</select>
+  </label>
+ 
+</form>
+      <MapWithAMarkerClusterer markers={this.state.markers1}/>
+      </div>
     )
   }
 }
