@@ -2,7 +2,7 @@ var _=require('lodash');
 import React from 'react';
 const fetch = require("isomorphic-fetch");
 
-const {compose, withProps, withHandlers, withStateHandlers} = require("recompose");
+const {compose, withProps, withHandlers, withStateHandlers,withState} = require("recompose");
 import {InfoBox} from "react-google-maps/lib/components/addons/InfoBox";
 import Modal from 'react-modal';
 import SlidingPane from 'react-sliding-pane';
@@ -46,7 +46,7 @@ const MapWithAMarkerClusterer = compose(
 
   withStateHandlers((i) => ({
    isOpen: _.range(1093).map(() => { return false; }),
-   isPaneOpen: false
+   isPaneOpen: false,
    business : 0,
    sports: 0,
    technology: 0,
