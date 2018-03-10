@@ -35,5 +35,8 @@ module.exports = {
 				loader: 'style-loader!css-loader!autoprefixer-loader!sass-loader'
 			}
 		]
-	}
+	},
+	externals:[{
+    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
+}]
 }

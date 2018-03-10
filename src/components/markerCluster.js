@@ -1,9 +1,11 @@
 var _=require('lodash');
 import React from 'react';
 const fetch = require("isomorphic-fetch");
-const {compose, withProps, withHandlers, withStateHandlers} = require("recompose");
-import {InfoBox} from "react-google-maps/lib/components/addons/InfoBox"
-
+const {compose, withProps, withHandlers, withStateHandlers, withState} = require("recompose");
+import {InfoBox} from "react-google-maps/lib/components/addons/InfoBox";
+import {MyCompo} from "./MyPieChart"
+import {CoolPieChart} from "./CoolPieChart"
+import {ToolTip} from './ToolTip'
 
 const {
   withScriptjs,
@@ -16,33 +18,74 @@ const { MarkerClusterer } = require("react-google-maps/lib/components/addons/Mar
 const MapWithAMarkerClusterer = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyA6PS9lTvK3KUejjIr7Kg3IBrfvBuyW9WM&v=3.exp&libraries=geometry,drawing,places",
-    loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `100%` }} />,
-    mapElement: <div style={{ height: `100%` }} />,
+    loadingElement: <div style={{ height: '100%' }} />,
+    containerElement: <div style={{ height: '100%' }} />,
+    mapElement: <div style={{ height: '100%' }} />,
+  
   }),
+  withState('m', 'setM', ''),
   withHandlers({
     onMarkerClustererClick: () => (markerClusterer) => {
+      //console.log(m)
       const clickedMarkers = markerClusterer.getMarkers()
       console.log(`Current clicked markers length: ${clickedMarkers.length}`)
       console.log(clickedMarkers)
       
+      //console.log(m)
       //console.log(_.chain(clickedMarkers).countBy("title").value())
     },
-    onMarkerClustererMouseOver: () => (markerClusterer) => {
-      console.log("MOUSE HOVER")
+    onMarkerClustererMouseOver: props =>(markerClusterer)=> event => {
+      console.log(markerClusterer);
+      props.setM('dfsd');
     }
   }),
-  withStateHandlers((i) => ({
-   isOpen: _.range(1093).map(() => { return false; })
+  withStateHandlers(() => ({
+   isOpen: _.range(1093).map(() => { return false; }),
+   business : 0,
+   sports: 0,
+   technology: 0,
+   general: 0,
+   entertainment: 0,
+   isPie: false
   }),
   {
     onToggleOpen: ({isOpen})=>(index)=>({
        isOpen:isOpen.map((val,i)=>{console.log(index);return (index==i?!val:false)}) 
-  })
+  }),
+    onMCOver: ({business, sports, technology, general, entertainment, isPie})=>(markerClusterer)=>(
+    {
+      //newEle: markerClusterer.getMarkers()
+      isPie: true,
+
+      business: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['business']),
+      sports: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['sports']),
+      technology: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['technology']),
+      general: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['general']),
+      entertainment: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['entertainment']),
+      //chartData: [{title: 'business', value:business, color:'#22594e'}, {title: 'business', value:business, color:'#22594e'},
+      //{title: 'business', value:business, color:'#22594e'}, {title: 'business', value:business, color:'#22594e'}, {title: 'business', value:business, color:'#22594e'}]
+  }),
+    onMCOut: ({isPie}) => () =>({
+        //business: markers1.filter((x) => {return x.category=='business'}).length,
+        //sports: markers1.filter((x) =>{return x.category=='sports'}).length,
+        //technology: markers1.filter((x) =>{return x.category=='technology'}).length,
+        //general: markers1.filter((x) =>{return x.category=='general'}).length,
+        //entertainment: markers1.filter((x) =>{return x.category=='entertainment'}).length,
+        isPie: false
+        
+    }),
+  
   }),
   withScriptjs,
   withGoogleMap
 )(props =>
+<div>
+ {props.isPie && <ToolTip
+          top="500" 
+          left="500"
+        >
+          <CoolPieChart business={props.business} sports={props.sports} general={props.general} entertainment={props.general} technology={props.technology}/>
+        </ToolTip>}
   <GoogleMap
     defaultZoom={3}
     defaultCenter={{ lat: 33.247875, lng: -83.441162 }}
@@ -53,10 +96,12 @@ const MapWithAMarkerClusterer = compose(
       enableRetinaIcons
       gridSize={60}
       maxZoom={10}    
-      onMouseOver={props.onMarkerClustererMouseOver}
-      title="CLUSTER 1"
+      onMouseOver={props.onMCOver}
+      onMouseOut={props.onMCOut}
+    
+      title="cluster"
     >
-     <p style={{backgroundColor:"black"}}> CLSUTER </p> 
+     
       {props.markers.map((marker,i) => (
         <Marker
           key={i}
@@ -77,9 +122,8 @@ const MapWithAMarkerClusterer = compose(
         </Marker>
       ))}
     </MarkerClusterer>
-
-
    </GoogleMap>
+  </div>
 );
 
 export class Cluster extends React.PureComponent {
