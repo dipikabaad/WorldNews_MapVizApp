@@ -12,7 +12,7 @@ window.React = React;
 render (
 	<Router history={hashHistory}>
 		<Route path="/" component={CustomMarker} />
-		<Route path="/c" component={Cluster} />
+		<Route path="/home" component={Cluster} />
 	</Router>,
 	document.getElementById("map-container")
 )

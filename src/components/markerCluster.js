@@ -9,6 +9,7 @@ import SlidingPane from 'react-sliding-pane';
 import 'react-sliding-pane/dist/react-sliding-pane.css';
 import {CoolPieChart} from "./CoolPieChart"
 import {ToolTip} from './ToolTip'
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap'
 
 const {
   withScriptjs,
@@ -147,9 +148,9 @@ const MapWithAMarkerClusterer = compose(
 export class Cluster extends React.PureComponent {
   constructor(props){
     super(props);
-    this.state = ({value: 'ALL', markers:[], markers1:[]});
-    this.handleChange = this.handleChange.bind(this);
-    
+    this.state = ({ markers:[], markers1:[], key:'All Categories'});
+
+    this.handleNavChange = this.handleNavChange.bind(this);
   }
   componentWillMount() {
     this.setState({ markers: []})
@@ -167,15 +168,17 @@ export class Cluster extends React.PureComponent {
 
     Modal.setAppElement(this.el);
   }
- handleChange(event) {
-    if (event.target.value != "ALL") {
-      this.setState({ value: event.target.value, 
-        markers1: this.state.markers.filter((x) => {return x.category==event.target.value})
+  handleNavChange(event) {
+    if (event != "All Categories") {
+      this.setState({key: event});
+      this.setState({ value: event, 
+        markers1: this.state.markers.filter((x) => {return x.category==event})
       });
     }
     else
     {
-      this.setState({value: event.target.value, markers1: this.state.markers});
+      this.setState({key: "All Categories"});
+      this.setState({value: event, markers1: this.state.markers});
     }
   }
    /*handleSubmit(event) {
@@ -185,21 +188,28 @@ export class Cluster extends React.PureComponent {
   }*/
   render() {
     return (<div>
-      <form>
-  <label>
-    Category:
-    <select value={this.state.value} onChange={this.handleChange}>
-    <option value="ALL">All</option>
-  <option value="business">Business</option>
-  <option value="sports">Sports</option>
-  <option selected value="technology">Technology</option>
-  <option value="entertainment">Entertainment</option>
-  <option value="general">General</option>
-</select>
-  </label>
- 
-</form>
-      <MapWithAMarkerClusterer markers={this.state.markers1}/>
+  <Navbar inverse collapseOnSelect style={{margin:0, width:'100%'}}>
+  <Navbar.Header>
+    <Navbar.Brand>
+      <a href="#home" style={{fontWeight: 'bold', fontSize: '40px'}}>News App</a>
+    </Navbar.Brand>
+  </Navbar.Header>
+  <Navbar.Collapse >
+  <Nav pullRight >
+
+    <NavDropdown eventKey={3} title={this.state.key} id="basic-nav-dropdown" onSelect={this.handleNavChange}>
+      <MenuItem eventKey="All Categories" >All Categories</MenuItem>
+      <MenuItem eventKey="general">general</MenuItem>
+      <MenuItem eventKey="business">business</MenuItem>
+      <MenuItem eventKey="sports">sports</MenuItem>
+      <MenuItem eventKey="technology">technology</MenuItem>
+      <MenuItem eventKey="entertainment">entertainment</MenuItem>
+    </NavDropdown>
+  </Nav>
+  </Navbar.Collapse>
+</Navbar>
+
+      <MapWithAMarkerClusterer markers={this.state.markers1} />
       </div>
     )
   }
