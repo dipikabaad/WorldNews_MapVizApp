@@ -9,7 +9,7 @@ import SlidingPane from 'react-sliding-pane';
 import 'react-sliding-pane/dist/react-sliding-pane.css';
 import {CoolPieChart} from "./CoolPieChart"
 import {ToolTip} from './ToolTip'
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap'
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem, FormGroup, FormControl, Button} from 'react-bootstrap'
 
 const {
   withScriptjs,
@@ -148,9 +148,11 @@ const MapWithAMarkerClusterer = compose(
 export class Cluster extends React.PureComponent {
   constructor(props){
     super(props);
-    this.state = ({ markers:[], markers1:[], key:'All Categories'});
+    this.state = ({ markers:[], markers1:[], key:'All Categories', value:''});
 
     this.handleNavChange = this.handleNavChange.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentWillMount() {
     this.setState({ markers: []})
@@ -168,17 +170,22 @@ export class Cluster extends React.PureComponent {
 
     Modal.setAppElement(this.el);
   }
+  handleSearch(e){
+    this.setState({ value: e.target.value });
+  }
+  handleSubmit(e){
+    console.log('Inside Submit' + e);
+    e.preventDefault();
+  }
   handleNavChange(event) {
     if (event != "All Categories") {
-      this.setState({key: event});
-      this.setState({ value: event, 
+      this.setState({ key: event, 
         markers1: this.state.markers.filter((x) => {return x.category==event})
       });
     }
     else
     {
-      this.setState({key: "All Categories"});
-      this.setState({value: event, markers1: this.state.markers});
+      this.setState({key: "All Categories", markers1: this.state.markers});
     }
   }
    /*handleSubmit(event) {
@@ -195,6 +202,13 @@ export class Cluster extends React.PureComponent {
     </Navbar.Brand>
   </Navbar.Header>
   <Navbar.Collapse >
+      <Navbar.Form pullRight>
+      <form onSubmit={this.handleSubmit}>
+        <FormControl  type="text" placeholder="Search" onChange={this.handleSearch} value={this.state.value}/><FormGroup>
+      </FormGroup>{' '}
+      <Button type="submit">Submit</Button>
+      </form>
+    </Navbar.Form>
   <Nav pullRight >
 
     <NavDropdown eventKey={3} title={this.state.key} id="basic-nav-dropdown" onSelect={this.handleNavChange}>
