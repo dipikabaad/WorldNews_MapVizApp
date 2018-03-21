@@ -208,9 +208,9 @@ export class Cluster extends React.PureComponent {
   <Navbar.Collapse >
       <Navbar.Form pullRight>
       <form onSubmit={this.handleSubmit}>
-        <FormControl  type="text" placeholder="Search" onChange={this.handleSearch} value={this.state.value}/><FormGroup>
+        <FormControl  type="text" placeholder="Type a Keyword" onChange={this.handleSearch} value={this.state.value}/><FormGroup>
       </FormGroup>{' '}
-      <Button type="submit">Submit</Button>
+      <Button type="submit">Search</Button>
       </form>
     </Navbar.Form>
   <Nav pullRight >
