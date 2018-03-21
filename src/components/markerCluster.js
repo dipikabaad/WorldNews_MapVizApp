@@ -176,6 +176,10 @@ export class Cluster extends React.PureComponent {
   handleSubmit(e){
     console.log('Inside Submit' + e);
     e.preventDefault();
+
+      this.setState({
+        markers1: this.state.markers.filter((x) => {console.log(x.description);console.log(x); return (((x.description || "").toLowerCase()).includes((this.state.value).toLowerCase()) || ((x.title || "").toLowerCase()).includes((this.state.value).toLowerCase()));})
+      });
   }
   handleNavChange(event) {
     if (event != "All Categories") {
