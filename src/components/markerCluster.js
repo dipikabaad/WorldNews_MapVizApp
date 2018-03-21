@@ -4,12 +4,12 @@ const fetch = require("isomorphic-fetch");
 
 const {compose, withProps, withHandlers, withStateHandlers,withState} = require("recompose");
 import {InfoBox} from "react-google-maps/lib/components/addons/InfoBox";
-import Modal from 'react-modal';
+//import Modal from 'react-modal';
 import SlidingPane from 'react-sliding-pane';
 import 'react-sliding-pane/dist/react-sliding-pane.css';
 import {CoolPieChart} from "./CoolPieChart"
 import {ToolTip} from './ToolTip'
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem, FormGroup, FormControl, Button} from 'react-bootstrap'
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem, FormGroup, FormControl, Button, Modal} from 'react-bootstrap'
 
 const {
   withScriptjs,
@@ -53,7 +53,10 @@ const MapWithAMarkerClusterer = compose(
    technology: 0,
    general: 0,
    entertainment: 0,
-   isPie: false
+   isPie: false,
+   showM: false,
+   //newsUrl: {__html : '<iframe src="https://www.google.com" style={{height:"100%", width:"100%"}}/>'}
+   newsUrl: ""
   }),
   {
     onToggleOpen: ({isOpen})=>(index)=>({
@@ -61,6 +64,14 @@ const MapWithAMarkerClusterer = compose(
   }),
     onPaneToggle: ({isPaneOpen})=>()=>({
 	isPaneOpen: !isPaneOpen
+    }),
+    handleMShow: ({showM, newsUrl})=>(newsURL)=>({
+        showM: true,
+        newsUrl: newsURL + '&output=embed'
+        //newsUrl: ([1].map((val,i) => {console.log(newsURL);return { __html : '<iframe src={'+ newsURL +'&output=embed'+ '} style={{height:"100%", width:"100%"}}/>'}}))[0]
+    }),
+    handleMClose: ({showM})=>()=>({
+        showM: false
     }),
     onMCOver: ({business, sports, technology, general, entertainment, isPie})=>(markerClusterer)=>(
     {
@@ -90,6 +101,20 @@ const MapWithAMarkerClusterer = compose(
 )(props =>
 
 <div>
+<Modal show={props.showM} onHide={props.handleMClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Modal heading</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h4>This is Modal</h4>
+            <iframe src={props.newsUrl} height="" width=""/>
+            
+            
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={props.handleMClose}>Close</Button>
+          </Modal.Footer>
+</Modal>
  {props.isPie && <ToolTip
           top="500" 
           left="500"
@@ -127,7 +152,7 @@ const MapWithAMarkerClusterer = compose(
       >
         <div style={{position:'relative', backgroundColor: 'black', padding: '10px', width:'400px', height:'100%', fontSize: '16px', color: '#FFFFFF' }}>
             <p style={{fontWeight:'bold',marginTop:'2px'}} onClick={props.onPaneToggle}>{marker.title}</p><p style={{fontSize:'10px', fontWeight:'italic'}}>{marker.category}</p>
-            <div style={{float:'left',marginRight:'15px'}}><img src={marker.urlToImage} height="50px" width="70px" /></div>{marker.description} 
+            <div style={{float:'left',marginRight:'15px'}}><img src={marker.urlToImage} height="50px" width="70px" onClick={() => props.handleMShow(marker.url)}/></div>{marker.description} 
         </div>
       </InfoBox>}
         </Marker>
@@ -168,7 +193,8 @@ export class Cluster extends React.PureComponent {
         this.setState({ markers: data, markers1:data });
       });
 
-    Modal.setAppElement(this.el);
+    //Modal.setAppElement(this.el);
+
   }
   handleSearch(e){
     this.setState({ value: e.target.value });

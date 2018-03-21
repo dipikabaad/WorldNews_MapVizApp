@@ -7,9 +7,14 @@ module.exports = {
 		publicPath: "assets"
 	},
 	devServer:{
-		inline: true,
+		inline: false,
 		contentBase: './dist',
-		port: 4000
+		port: 4000,
+		headers: {
+     "Access-Control-Allow-Origin": "*",
+     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+     "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+   }
 	},
 	module: {
 		loaders: [
