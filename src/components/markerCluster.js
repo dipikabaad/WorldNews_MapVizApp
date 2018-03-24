@@ -67,7 +67,7 @@ const MapWithAMarkerClusterer = compose(
     }),
     handleMShow: ({showM, newsUrl})=>(newsURL)=>({
         showM: true,
-        newsUrl: newsURL + '&output=embed'
+        newsUrl: newsURL
         //newsUrl: ([1].map((val,i) => {console.log(newsURL);return { __html : '<iframe src={'+ newsURL +'&output=embed'+ '} style={{height:"100%", width:"100%"}}/>'}}))[0]
     }),
     handleMClose: ({showM})=>()=>({
@@ -103,11 +103,9 @@ const MapWithAMarkerClusterer = compose(
 <div>
 <Modal show={props.showM} onHide={props.handleMClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <h4>This is Modal</h4>
-            <iframe src={props.newsUrl} height="" width=""/>
+            <iframe src={props.newsUrl} height="100%" width="100%" frameBorder="0"/>
             
             
           </Modal.Body>
@@ -150,9 +148,10 @@ const MapWithAMarkerClusterer = compose(
         onCloseClick={()=>props.onToggleOpen(i)}
         options={{ closeBoxURL: ``, enableEventPropagation: true }}
       >
-        <div style={{position:'relative', backgroundColor: 'black', padding: '10px', width:'400px', height:'100%', fontSize: '16px', color: '#FFFFFF' }}>
-            <p style={{fontWeight:'bold',marginTop:'2px'}} onClick={props.onPaneToggle}>{marker.title}</p><p style={{fontSize:'10px', fontWeight:'italic'}}>{marker.category}</p>
-            <div style={{float:'left',marginRight:'15px'}}><img src={marker.urlToImage} height="50px" width="70px" onClick={() => props.handleMShow(marker.url)}/></div>{marker.description} 
+        <div style={{position:'relative', backgroundColor: 'black', padding: '10px', width:'400px', height:'100%', fontSize: '16px', color: '#FFFFFF' }} onClick={() => props.handleMShow(marker.url)}>
+            <p style={{fontWeight:'bold',marginTop:'2px'}}>{marker.title}</p><p style={{fontSize:'10px', fontWeight:'italic'}}>{marker.category}</p>
+            <div style={{float:'left',marginRight:'15px'}}><img src={marker.urlToImage} height="50px" width="70px"/></div>
+            {marker.description} 
         </div>
       </InfoBox>}
         </Marker>
