@@ -23,8 +23,8 @@ const demoFancyMapStyles = require("./demoFancyMapStyles.json");
 const MapWithAMarkerClusterer = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyA6PS9lTvK3KUejjIr7Kg3IBrfvBuyW9WM&v=3.exp&libraries=geometry,drawing,places",
-    loadingElement: <div style={{ height: '100%' }} />,
-    containerElement: <div style={{ height: '100%' }} />,
+    loadingElement: <div style={{ marginTop:'1%', height: '95%' }} />,
+    containerElement: <div style={{  height: '95%' }} />,
     mapElement: <div style={{ height: '100%' }} />,
   
   }),
