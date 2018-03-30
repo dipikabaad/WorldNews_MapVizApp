@@ -75,11 +75,57 @@ export class CoolPieChart extends React.Component{
       		top: '0',
       		left: '0',
       		value: '0',
-      		key: ""
+      		key: "",
+          data: []
 		};
 		this.mouseOverHandler = this.mouseOverHandler.bind(this);
 		this.createTooltip = this.createTooltip.bind(this);
+    this.updateData = this.updateData.bind(this);
 	}
+   componentWillMount(){
+    this.updateData();
+   }
+   updateData(){
+    const data1 = [];
+    
+    const values = [];
+    const key_i = []
+    const colors = []
+    if( this.props.business != 0){
+      colors.push('#5DA5DA');
+      values.push(this.props.business);
+      key_i.push("BIZ");
+    }
+    if (this.props.sport != 0 ){
+      colors.push('#FAA43A');
+      values.push(this.props.sport);
+      key_i.push("SPRT");
+    }
+    if (this.props.politics != 0){
+      colors.push('#60BD68');
+      values.push(this.props.politics);
+      key_i.push("POL");
+    }
+    if (this.props.entertainment != 0){
+      colors.push('#F17CB0');
+      values.push(this.props.entertainment);
+      key_i.push("ENT");
+    }
+    if (this.props.tech != 0){
+      colors.push('#B2912F');
+      values.push(this.props.tech);
+      key_i.push("TECH");
+    }
+    
+    key_i.forEach((key1, index) => {
+      data1.push({
+        key:  key_i[index] + ":" + values[index]  ,
+        value: values[index],
+        color: colors[index]
+      });
+   });
+   this.setState({data : data1});
+ }
 	mouseOverHandler(d, e) {
     this.setState({
       showToolTip: true,
@@ -124,13 +170,7 @@ createTooltip () {
  return( <div>{this.state.showToolTip && this.createTooltip()}
  	<PieChart
  	labels
-    data={[
-      { key: "BIZ"+":"+this.props.business  , value: this.props.business, color: '#aaac84' },
-      { key: "SPORT"+":"+this.props.sport, value: this.props.sport, color: '#dce7c5' },
-      { key: "ENT"+":"+this.props.entertainment , value: this.props.entertainment, color: '#e3a51a' },
-      {key: "POL" + ":"+this.props.politics, value: this.props.politics, color: "#69c2b0"},
-      {key: "TECH"+":"+this.props.tech, value: this.props.tech, color: "#a1d9ce"}
-    ]}
+    data = {this.state.data}
     size={200}
     innerHoleSize={50}
     mouseOverHandler={this.mouseOverHandler}
@@ -171,3 +211,12 @@ CoolPieChart.defaultProps = { business: 0, sport: 0, entertainment:0, politics:0
     {color:'#69c2b0'},
     {color: '#a1d9ce'}
   ]} horizontal></Legend>*/
+/*
+data={[
+      { key: "BIZ"+":"+this.props.business  , value: this.props.business, color: '#aaac84' },
+      { key: "SPORT"+":"+this.props.sport, value: this.props.sport, color: '#dce7c5' },
+      { key: "ENT"+":"+this.props.entertainment , value: this.props.entertainment, color: '#e3a51a' },
+      {key: "POL" + ":"+this.props.politics, value: this.props.politics, color: "#69c2b0"},
+      {key: "TECH"+":"+this.props.tech, value: this.props.tech, color: "#a1d9ce"}
+    ]}
+*/
