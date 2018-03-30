@@ -1,8 +1,8 @@
 import json
 import geopy
 from geopy.distance import VincentyDistance
-
-news_file_name = './outs/combined.txt'
+import random
+news_file_name = 'C:\\Dipika\\Eindhoven\\Quater 3\\VCP\\NewsApp\\WorldNews_MapVizApp\\news_cat_classify\\outs\\combined.txt'
 
 news_file=json.load(open(news_file_name))
 
@@ -19,40 +19,55 @@ bbc_news_categories = {
     5:'tech'
 }
 
-las = [(50.534827, 72.720889),(51.103963, 72.874697),(52.211403, 71.408023),(51.820935, 70.034732),(52.056300, 73.253726),
+las = [(51.487941, 75.225694),(51.150431, 70.946143),(49.737285, 70.122169),(49.652006, 70.363868),(52.056300, 73.253726),
 (50.981354, 69.685916),(49.554181, 74.651736)]
-
+dist_1 = []
 j=0
 for country in news_file:
-	
-	c_posts = country['posts']
-	location = country['extra']
-	
-	k = 0	
-	for post in c_posts:
-		if k == 0:
-			origin = geopy.Point(location['lat'], location['lng'])
-			destination = origin
-		else:
-			destination = VincentyDistance(kilometers=100).destination(origin, k*50)
-		k += 1
-		category = bbc_news_categories[int(labels[i])]
-		i += 1
+    c_posts = country['posts']
+    location = country['extra']
+    dist1 = []
+    dist1 = random.sample(range(5, 50), len(c_posts))
+    k = 0	
+    for post in c_posts:
+        if k == 0:
+            origin = geopy.Point(location['lat'], location['lng'])
+            destination = origin
+        else:
+            destination = VincentyDistance(kilometers=dist1[k]).destination(origin, k*30)
+        k += 1
+        category = bbc_news_categories[int(labels[i])]
+        i += 1
 		#print("INDEX",i,"CATEGORY",category)
-		post['index'] = i
-		post['category'] = category
-		if location['country']=='KZ':
-			location['lat'] = las[j][0]
-			location['lng'] = las[j][1]
-			j=j+1
-		else:
-			location['lat'] = destination.latitude
-			location['lng'] = destination.longitude
-		post['loc_info'] = location
-		if location['country'] == 'KZ':
-			print(location)	
-		all_posts.append(post)
+        post['index'] = i
+        loc_info = {} 
+        post['category'] = category
+        '''if location['country']=='KZ':
+            loc_info['lat'] = las[j][0]
+            loc_info['lng'] = las[j][1]
+            
+            j=j+1
+        else:'''
+        loc_info['lat'] = destination.latitude
+        loc_info['lng'] = destination.longitude
+        loc_info['country'] = location['country']
+        post['loc_info'] = loc_info
+        if location['country'] == 'KZ':
+            print(post['loc_info'],loc_info)
+        if location['country'] == "IS":
+            continue
+        all_posts.append(post)
+       
+#for post in all_posts:
+    
 
+with open('C:\\Dipika\\Eindhoven\\Quater 3\\VCP\\NewsApp\\WorldNews_MapVizApp\\dist\\all_data.json','w') as outfile:
+	json.dump(all_posts, outfile) 
 
-with open('../WorldNews_MapVizApp/dist/all_data.json','w') as outfile:
-	json.dump(all_posts, outfile) 	
+with open('C:\\Dipika\\Eindhoven\\Quater 3\\VCP\\NewsApp\\WorldNews_MapVizApp\\dist\\all_data.json','r') as infile:
+    postss=json.load(infile)
+    print(len(postss))
+    
+    for p in postss:
+        if p['loc_info']['country'] == 'KZ':
+            print(p['loc_info'])

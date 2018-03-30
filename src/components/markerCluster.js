@@ -23,8 +23,8 @@ const demoFancyMapStyles = require("./demoFancyMapStyles.json");
 const MapWithAMarkerClusterer = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyA6PS9lTvK3KUejjIr7Kg3IBrfvBuyW9WM&v=3.exp&libraries=geometry,drawing,places",
-    loadingElement: <div style={{ marginTop:'1%', height: '95%' }} />,
-    containerElement: <div style={{  height: '95%' }} />,
+    loadingElement: <div style={{  marginTop: '0.5%',height: '100%'}} />,
+    containerElement: <div style={{  height: '90%' }} />,
     mapElement: <div style={{ height: '100%' }} />,
   
   }),
@@ -46,7 +46,7 @@ const MapWithAMarkerClusterer = compose(
   }),
 
   withStateHandlers((i) => ({
-   isOpen: _.range(1093).map(() => { return false; }),
+   isOpen: _.range(600).map(() => { return false; }),
    isPaneOpen: false,
    business : 0,
    sport: 0,
@@ -114,8 +114,8 @@ const MapWithAMarkerClusterer = compose(
           </Modal.Footer>
 </Modal>
  {props.isPie && <ToolTip
-          top="500" 
-          left="500"
+          top="100" 
+          left="50"
         >
           <CoolPieChart business={props.business} sport={props.sport} politics={props.politics} entertainment={props.general} tech={props.tech}/>
         </ToolTip>}
@@ -128,8 +128,8 @@ const MapWithAMarkerClusterer = compose(
       onClick={props.onMarkerClustererClick}
       averageCenter
       enableRetinaIcons
-      gridSize={60}
-      maxZoom={5}    
+      gridSize={50}
+      maxZoom={10}    
       onMouseOver={props.onMCOver}
       onMouseOut={props.onMCOut}
     
@@ -148,10 +148,11 @@ const MapWithAMarkerClusterer = compose(
         onCloseClick={()=>props.onToggleOpen(i)}
         options={{ closeBoxURL: ``, enableEventPropagation: true }}
       >
-        <div style={{position:'relative', backgroundColor: 'black', padding: '10px', width:'400px', height:'100%', fontSize: '16px', color: '#FFFFFF' }} onClick={() => props.handleMShow(marker.url)}>
-            <p style={{fontWeight:'bold',marginTop:'2px'}}>{marker.title}</p><p style={{fontSize:'10px', fontWeight:'italic'}}>{marker.category}</p>
-            <div style={{float:'left',marginRight:'15px'}}><img src={marker.thread.main_image} height="50px" width="70px"/></div>
+        <div style={{position:'relative', backgroundColor: 'black', padding: '10px', width:'400px', height:'100%', fontSize: '15px', color: '#FFFFFF' }} onClick={() => props.handleMShow(marker.url)}>
+            <p style={{fontWeight:'bold',marginTop:'2px', fontSize: '18px', color:'#00bfff'}}>{marker.title}</p><p style={{fontSize:'12px', fontWeight:'italic'}}>{marker.category}</p>
+            <div style={{float:'left',marginRight:'15px'}}><img src={marker.thread.main_image} height="70px" width="70px"/></div>
             {marker.text.slice(0,150)+" ..."} 
+            {(marker.thread.social.facebook.likes != 0) &&(<div style={{fontSize: '18px'}}> <img src='./images/fb.png' height="20px" width="20px"/>{ " " + marker.thread.social.facebook.likes}</div>)}
         </div>
       </InfoBox>}
         </Marker>
@@ -242,7 +243,7 @@ export class Cluster extends React.PureComponent {
 
     <NavDropdown eventKey={3} title={this.state.key} id="basic-nav-dropdown" onSelect={this.handleNavChange}>
       <MenuItem eventKey="All Categories" >All Categories</MenuItem>
-      <MenuItem eventKey="politics">general</MenuItem>
+      <MenuItem eventKey="politics">politics</MenuItem>
       <MenuItem eventKey="business">business</MenuItem>
       <MenuItem eventKey="sport">sports</MenuItem>
       <MenuItem eventKey="tech">technology</MenuItem>
