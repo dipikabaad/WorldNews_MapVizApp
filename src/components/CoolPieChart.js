@@ -2,7 +2,7 @@ import {PieChart, Legend} from 'react-easy-chart';
 import React from 'react';
 import {ToolTip} from './ToolTip'
 
-/*export const CoolPieChart = ({business, sports, entertainment, general, technology}) => {
+/*export const CoolPieChart = ({business, sports, entertainment, politics, technology}) => {
 
  const mouseOverHandler = (d, e) =>{
     this.setState({
@@ -42,7 +42,7 @@ import {ToolTip} from './ToolTip'
       { key: "business" + " " + business, value: business, color: '#aaac84' },
       { key: "sports" + " " + sports, value: sports, color: '#dce7c5' },
       { key: "entertainment" + " " + entertainment, value: entertainment, color: '#e3a51a' },
-      {key: "general" + " " + general, value: general, color: "#69c2b0"},
+      {key: "politics" + " " + politics, value: politics, color: "#69c2b0"},
       {key: "technology" + " " + technology, value: technology, color: "#a1d9ce"}
     ]}
     innerHoleSize={200}
@@ -126,10 +126,10 @@ createTooltip () {
  	labels
     data={[
       { key: "BIZ"+":"+this.props.business  , value: this.props.business, color: '#aaac84' },
-      { key: "SPORT"+":"+this.props.sports, value: this.props.sports, color: '#dce7c5' },
+      { key: "SPORT"+":"+this.props.sport, value: this.props.sport, color: '#dce7c5' },
       { key: "ENT"+":"+this.props.entertainment , value: this.props.entertainment, color: '#e3a51a' },
-      {key: "GEN" + ":"+this.props.general, value: this.props.general, color: "#69c2b0"},
-      {key: "TECH"+":"+this.props.technology, value: this.props.technology, color: "#a1d9ce"}
+      {key: "POL" + ":"+this.props.politics, value: this.props.politics, color: "#69c2b0"},
+      {key: "TECH"+":"+this.props.tech, value: this.props.tech, color: "#a1d9ce"}
     ]}
     size={200}
     innerHoleSize={50}
@@ -155,14 +155,14 @@ createTooltip () {
 }
 
 
-CoolPieChart.defaultProps = { business: 0, sports: 0, entertainment:0, general:0, technology:0 };
+CoolPieChart.defaultProps = { business: 0, sport: 0, entertainment:0, politics:0, tech:0 };
  /*<Legend 
   	styles={{}}
   	data={[
       { key: "BIZ"  , value: this.props.business, color: '#aaac84' },
       { key: "SPORT", value: this.props.sports, color: '#dce7c5' },
       { key: "ENT" , value: this.props.entertainment, color: '#e3a51a' },
-      {key: "GEN", value: this.props.general, color: "#69c2b0"},
+      {key: "GEN", value: this.props.politics, color: "#69c2b0"},
       {key: "TECH", value: this.props.technology, color: "#a1d9ce"}
     ]} dataId={'key'} config={[
     {color: '#aaac84'},

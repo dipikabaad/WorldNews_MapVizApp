@@ -49,9 +49,9 @@ const MapWithAMarkerClusterer = compose(
    isOpen: _.range(1093).map(() => { return false; }),
    isPaneOpen: false,
    business : 0,
-   sports: 0,
-   technology: 0,
-   general: 0,
+   sport: 0,
+   tech: 0,
+   politics: 0,
    entertainment: 0,
    isPie: false,
    showM: false,
@@ -73,15 +73,15 @@ const MapWithAMarkerClusterer = compose(
     handleMClose: ({showM})=>()=>({
         showM: false
     }),
-    onMCOver: ({business, sports, technology, general, entertainment, isPie})=>(markerClusterer)=>(
+    onMCOver: ({business, sport, tech, politics, entertainment, isPie})=>(markerClusterer)=>(
     {
       //newEle: markerClusterer.getMarkers()
       isPie: true,
 
       business: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['business']),
-      sports: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['sports']),
-      technology: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['technology']),
-      general: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['general']),
+      sport: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['sport']),
+      tech: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['tech']),
+      politics: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['politics']),
       entertainment: (_.chain(markerClusterer.getMarkers()).countBy("title").value()['entertainment']),
       //chartData: [{title: 'business', value:business, color:'#22594e'}, {title: 'business', value:business, color:'#22594e'},
       //{title: 'business', value:business, color:'#22594e'}, {title: 'business', value:business, color:'#22594e'}, {title: 'business', value:business, color:'#22594e'}]
@@ -117,10 +117,10 @@ const MapWithAMarkerClusterer = compose(
           top="500" 
           left="500"
         >
-          <CoolPieChart business={props.business} sports={props.sports} general={props.general} entertainment={props.general} technology={props.technology}/>
+          <CoolPieChart business={props.business} sport={props.sport} politics={props.politics} entertainment={props.general} tech={props.tech}/>
         </ToolTip>}
   <GoogleMap
-    defaultZoom={3}
+    defaultZoom={2}
     defaultCenter={{ lat: 33.247875, lng: -83.441162 }}
     defaultOptions={{ styles: demoFancyMapStyles }}
   >
@@ -129,7 +129,7 @@ const MapWithAMarkerClusterer = compose(
       averageCenter
       enableRetinaIcons
       gridSize={60}
-      maxZoom={10}    
+      maxZoom={5}    
       onMouseOver={props.onMCOver}
       onMouseOut={props.onMCOut}
     
@@ -139,7 +139,7 @@ const MapWithAMarkerClusterer = compose(
       {props.markers.map((marker,i) => (
         <Marker
           key={i}
-          position={{ lat: marker.lat, lng: marker.lng}}
+          position={{ lat: marker.loc_info.lat, lng: marker.loc_info.lng}}
           title={marker.category}
           onClick={()=>props.onToggleOpen(i)}
           icon={{url:'./images/'+marker.category+'.png'}} 
@@ -150,8 +150,8 @@ const MapWithAMarkerClusterer = compose(
       >
         <div style={{position:'relative', backgroundColor: 'black', padding: '10px', width:'400px', height:'100%', fontSize: '16px', color: '#FFFFFF' }} onClick={() => props.handleMShow(marker.url)}>
             <p style={{fontWeight:'bold',marginTop:'2px'}}>{marker.title}</p><p style={{fontSize:'10px', fontWeight:'italic'}}>{marker.category}</p>
-            <div style={{float:'left',marginRight:'15px'}}><img src={marker.urlToImage} height="50px" width="70px"/></div>
-            {marker.description} 
+            <div style={{float:'left',marginRight:'15px'}}><img src={marker.thread.main_image} height="50px" width="70px"/></div>
+            {marker.text.slice(0,150)+" ..."} 
         </div>
       </InfoBox>}
         </Marker>
@@ -183,7 +183,7 @@ export class Cluster extends React.PureComponent {
   }
 
   componentDidMount() {
-    const url = './data.json'
+    const url = './all_data.json'
 
     fetch(url)
       .then(res => res.json())
@@ -203,7 +203,7 @@ export class Cluster extends React.PureComponent {
     e.preventDefault();
 
       this.setState({
-        markers1: this.state.markers.filter((x) => {console.log(x.description);console.log(x); return (((x.description || "").toLowerCase()).includes((this.state.value).toLowerCase()) || ((x.title || "").toLowerCase()).includes((this.state.value).toLowerCase()));})
+        markers1: this.state.markers.filter((x) => {return (((x.text || "").toLowerCase()).includes((this.state.value).toLowerCase()) || ((x.title || "").toLowerCase()).includes((this.state.value).toLowerCase()));})
       });
   }
   handleNavChange(event) {
@@ -242,10 +242,10 @@ export class Cluster extends React.PureComponent {
 
     <NavDropdown eventKey={3} title={this.state.key} id="basic-nav-dropdown" onSelect={this.handleNavChange}>
       <MenuItem eventKey="All Categories" >All Categories</MenuItem>
-      <MenuItem eventKey="general">general</MenuItem>
+      <MenuItem eventKey="politics">general</MenuItem>
       <MenuItem eventKey="business">business</MenuItem>
-      <MenuItem eventKey="sports">sports</MenuItem>
-      <MenuItem eventKey="technology">technology</MenuItem>
+      <MenuItem eventKey="sport">sports</MenuItem>
+      <MenuItem eventKey="tech">technology</MenuItem>
       <MenuItem eventKey="entertainment">entertainment</MenuItem>
     </NavDropdown>
   </Nav>
