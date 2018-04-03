@@ -2,6 +2,7 @@ var _=require('lodash');
 import React from 'react';
 const fetch = require("isomorphic-fetch");
 
+import Switch from 'react-switch';
 const {compose, withProps, withHandlers, withStateHandlers,withState} = require("recompose");
 import {InfoBox} from "react-google-maps/lib/components/addons/InfoBox";
 //import Modal from 'react-modal';
@@ -33,14 +34,14 @@ const MapWithAMarkerClusterer = compose(
     onMarkerClustererClick: () => (markerClusterer) => {
       //console.log(m)
       const clickedMarkers = markerClusterer.getMarkers()
-      console.log(`Current clicked markers length: ${clickedMarkers.length}`)
-      console.log(clickedMarkers)
+      //console.log(`Current clicked markers length: ${clickedMarkers.length}`)
+      //console.log(clickedMarkers)
       
       //console.log(m)
       //console.log(_.chain(clickedMarkers).countBy("title").value())
     },
     onMarkerClustererMouseOver: props =>(markerClusterer)=> event => {
-      console.log(markerClusterer);
+      //console.log(markerClusterer);
       props.setM('dfsd');
     }
   }),
@@ -60,7 +61,7 @@ const MapWithAMarkerClusterer = compose(
   }),
   {
     onToggleOpen: ({isOpen})=>(index)=>({
-       isOpen:isOpen.map((val,i)=>{console.log(index);return (index==i?!val:false)}) 
+       isOpen:isOpen.map((val,i)=>{return (index==i?!val:false)}) 
   }),
     onPaneToggle: ({isPaneOpen})=>()=>({
 	isPaneOpen: !isPaneOpen
@@ -173,12 +174,13 @@ const MapWithAMarkerClusterer = compose(
 export class Cluster extends React.PureComponent {
   constructor(props){
     super(props);
-    this.state = ({ markers:[], markers1:[], key:'All Categories', value:''});
-
+    this.state = ({ markers:[], markers1:[],markers2:[], key:'All Categories', value:'', isPopular:false});
+    this.handlePopular = this.handlePopular.bind(this);
     this.handleNavChange = this.handleNavChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
   componentWillMount() {
     this.setState({ markers: []})
   }
@@ -189,33 +191,78 @@ export class Cluster extends React.PureComponent {
     fetch(url)
       .then(res => res.json())
       .then(data => {
-	console.log(data[0]);
+	//console.log(data[0]);
         this.setState({ markers: data, markers1:data });
+
       });
 
     //Modal.setAppElement(this.el);
 
   }
+  handlePopular(e){
+     
+      if (this.state.isPopular == false) {
+        console.log("before" + (this.state.markers1).length);
+        if(this.state.key != "All Categories"){
+      this.setState(function(prevState, props){return {isPopular:true,
+        markers1: this.state.markers.filter((x) => {return ((x.thread.social.facebook.likes>100)&(x.category==this.state.key))})
+       
+      }});
+      }
+      else{
+        this.setState(function(prevState, props){return {isPopular:true,
+        markers1: this.state.markers.filter((x) => {return ((x.thread.social.facebook.likes>100))}),
+      }});
+      }
+    }
+    else
+    {
+      if(this.state.key != "All Categories"){
+      this.setState(function(prevState, props){return {isPopular:false,
+        markers1: this.state.markers.filter((x) => {return ((x.category==this.state.key))}),
+       
+      }})
+      }
+      else{
+        this.setState(function(prevState, props){return {isPopular:false,
+        markers1: this.state.markers
+      }});
+      }
+    }
+      
+  }
   handleSearch(e){
     this.setState({ value: e.target.value });
   }
   handleSubmit(e){
-    console.log('Inside Submit' + e);
+    //console.log('Inside Submit' + e);
     e.preventDefault();
 
       this.setState({
-        markers1: this.state.markers.filter((x) => {return (((x.text || "").toLowerCase()).includes((this.state.value).toLowerCase()) || ((x.title || "").toLowerCase()).includes((this.state.value).toLowerCase()));})
+        markers1: this.state.markers1.filter((x) => {return (((x.text || "").toLowerCase()).includes((this.state.value).toLowerCase()) || ((x.title || "").toLowerCase()).includes((this.state.value).toLowerCase()));})
       });
   }
   handleNavChange(event) {
     if (event != "All Categories") {
-      this.setState({ key: event, 
-        markers1: this.state.markers.filter((x) => {return x.category==event})
-      });
+      if(this.state.isPopular == true){
+        this.setState({key: event, markers1: this.state.markers.filter((x) => { return ((x.thread.social.facebook.likes>100) &(x.category==event)) })});
+      }
+      else{
+          this.setState({key:event, markers1: this.state.markers});
+      }
+      //this.setState({ key: event, 
+      //  markers1: this.state.markers1.filter((x) => {return x.category==event})
+      //});
     }
     else
     {
-      this.setState({key: "All Categories", markers1: this.state.markers});
+      if(this.state.isPopular == true){
+        this.setState({key: "All Categories", markers1: this.state.markers.filter((x) => { return x.thread.social.facebook.likes>100}) });
+      }
+      else{
+          this.setState({key: "All Categories", markers1: this.state.markers});
+      }
+      //this.setState({key: "All Categories", markers1: this.state.markers1});
     }
   }
    /*handleSubmit(event) {
@@ -225,6 +272,7 @@ export class Cluster extends React.PureComponent {
   }*/
   render() {
     return (<div>
+      
   <Navbar inverse collapseOnSelect style={{margin:0, width:'100%'}}>
   <Navbar.Header>
     <Navbar.Brand>
@@ -232,16 +280,12 @@ export class Cluster extends React.PureComponent {
     </Navbar.Brand>
   </Navbar.Header>
   <Navbar.Collapse >
-      <Navbar.Form pullRight>
-      <form onSubmit={this.handleSubmit}>
-        <FormControl  type="text" placeholder="Type a Keyword" onChange={this.handleSearch} value={this.state.value}/><FormGroup>
-      </FormGroup>{' '}
-      <Button type="submit">Search</Button>
-      </form>
-    </Navbar.Form>
-  <Nav pullRight >
 
-    <NavDropdown eventKey={3} title={this.state.key} id="basic-nav-dropdown" onSelect={this.handleNavChange}>
+
+  <Nav pullLeft>
+     
+     
+  <NavDropdown eventKey={3} title={this.state.key} id="basic-nav-dropdown" onSelect={this.handleNavChange}>
       <MenuItem eventKey="All Categories" >All Categories</MenuItem>
       <MenuItem eventKey="politics">politics</MenuItem>
       <MenuItem eventKey="business">business</MenuItem>
@@ -249,7 +293,31 @@ export class Cluster extends React.PureComponent {
       <MenuItem eventKey="tech">technology</MenuItem>
       <MenuItem eventKey="entertainment">entertainment</MenuItem>
     </NavDropdown>
-  </Nav>
+    <Navbar.Text>Popular</Navbar.Text>
+    <NavItem >
+     <label htmlFor="normal-switch">
+      <Switch
+  checked={this.state.isPopular}
+  onChange={this.handlePopular}
+  id="normal-switch"
+  ></Switch>
+  </label>
+  </NavItem>
+     </Nav>
+// Different labels example...
+// Material Design example...
+// Such hover, much wow!   
+
+ <Navbar.Form pullRight>
+      <form onSubmit={this.handleSubmit}>
+        <FormControl  type="text" placeholder="Type a Keyword" onChange={this.handleSearch} value={this.state.value}/><FormGroup>
+      </FormGroup>{' '}
+      <Button type="submit">Search</Button>
+      </form>
+    </Navbar.Form>
+
+         
+  
   </Navbar.Collapse>
 </Navbar>
 

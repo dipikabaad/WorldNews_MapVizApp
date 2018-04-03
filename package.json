@@ -44,6 +44,9 @@
     "react-icons": "^2.2.7",
     "react-router": "^3.0.0",
     "react-sliding-pane": "^2.0.2",
+    "react-switch": "^2.3.0",
+    "react-toggle": "^4.0.2",
+    "react-toggle-button": "^2.2.0",
     "recompose": "^0.26.0"
   }
 }
