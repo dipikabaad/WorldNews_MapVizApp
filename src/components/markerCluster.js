@@ -245,10 +245,10 @@ export class Cluster extends React.PureComponent {
   handleNavChange(event) {
     if (event != "All Categories") {
       if(this.state.isPopular == true){
-        this.setState({key: event, markers1: this.state.markers.filter((x) => { return ((x.thread.social.facebook.likes>100) &(x.category==event)) })});
+        this.setState({key: event, markers1: this.state.markers.filter((x) => { return ((x.thread.social.facebook.likes>100) &&(x.category==event)) })});
       }
       else{
-          this.setState({key:event, markers1: this.state.markers});
+          this.setState({key:event, markers1: this.state.markers.filter((x) => {return (x.category==event)})});
       }
       //this.setState({ key: event, 
       //  markers1: this.state.markers1.filter((x) => {return x.category==event})
