@@ -4,7 +4,7 @@ import { Style } from 'radium';
 
 const toolTipStyles = {
   '.tooltip': {
-    border: 'solid silver 1px',
+  
     position: 'fixed',
     opacity: 0.8,
     borderRadius: '4px',
